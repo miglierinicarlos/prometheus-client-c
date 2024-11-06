@@ -38,7 +38,7 @@ prom_histogram_buckets_t *prom_histogram_buckets_new(size_t count, double bucket
   }
   va_list arg_list;
   va_start(arg_list, bucket);
-  for (int i = 1; i < count; i++) {
+  for (size_t i = 1; i < count; i++) {
     upper_bounds[i] = va_arg(arg_list, double);
   }
   va_end(arg_list);

@@ -127,7 +127,7 @@ int prom_metric_formatter_load_l_value(prom_metric_formatter_t *self, const char
 
   if (label_count == 0) return 0;
 
-  for (int i = 0; i < label_count; i++) {
+  for (size_t i = 0; i < label_count; i++) {
     if (i == 0) {
       r = prom_string_builder_add_char(self->string_builder, '{');
       if (r) return r;

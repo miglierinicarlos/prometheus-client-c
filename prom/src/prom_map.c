@@ -31,7 +31,7 @@
 
 #define PROM_MAP_INITIAL_SIZE 32
 
-static void destroy_map_node_value_no_op(void *value) {}
+static void destroy_map_node_value_no_op(void *value) {(void)value;}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // prom_map_node
@@ -94,7 +94,7 @@ prom_map_t *prom_map_new() {
   self->addrs = prom_malloc(sizeof(prom_linked_list_t) * self->max_size);
   self->free_value_fn = destroy_map_node_value_no_op;
 
-  for (int i = 0; i < self->max_size; i++) {
+  for (size_t i = 0; i < self->max_size; i++) {
     self->addrs[i] = prom_linked_list_new();
     r = prom_linked_list_set_free_fn(self->addrs[i], prom_map_node_free);
     if (r) {
@@ -152,6 +152,7 @@ int prom_map_destroy(prom_map_t *self) {
 
 static size_t prom_map_get_index_internal(const char *key, size_t *size, size_t *max_size) {
   size_t index;
+(void)size;
   size_t a = 31415, b = 27183;
   for (index = 0; *key != '\0'; key++, a = a * b % (*max_size - 1)) {
     index = (a * index + *key) % *max_size;
@@ -179,7 +180,7 @@ size_t prom_map_get_index(prom_map_t *self, const char *key) {
 }
 
 static void *prom_map_get_internal(const char *key, size_t *size, size_t *max_size, prom_linked_list_t *keys,
-                                   prom_linked_list_t **addrs, prom_map_node_free_value_fn free_value_fn) {
+                                   prom_linked_list_t **addrs, prom_map_node_free_value_fn free_value_fn) { (void)keys;
   size_t index = prom_map_get_index_internal(key, size, max_size);
   prom_linked_list_t *list = addrs[index];
   prom_map_node_t *temp_map_node = prom_map_node_new(key, NULL, free_value_fn);
@@ -269,7 +270,7 @@ int prom_map_ensure_space(prom_map_t *self) {
   prom_linked_list_t **new_addrs = prom_malloc(sizeof(prom_linked_list_t) * new_max);
 
   // Initialize the new array
-  for (int i = 0; i < new_max; i++) {
+  for (size_t i = 0; i < new_max; i++) {
     new_addrs[i] = prom_linked_list_new();
     r = prom_linked_list_set_free_fn(new_addrs[i], prom_map_node_free);
     if (r) return r;
@@ -278,7 +279,7 @@ int prom_map_ensure_space(prom_map_t *self) {
   }
 
   // Iterate through each linked-list at each memory region in the map's backbone
-  for (int i = 0; i < self->max_size; i++) {
+  for (size_t i = 0; i < self->max_size; i++) {
     // Create a new map node for each node in the linked list and insert it into the new map. Afterwards, deallocate
     // the old map node
     prom_linked_list_t *list = self->addrs[i];

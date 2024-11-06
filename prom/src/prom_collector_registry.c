@@ -192,6 +192,7 @@ int prom_collector_registry_register_collector(prom_collector_registry_t *self, 
 
 int prom_collector_registry_validate_metric_name(prom_collector_registry_t *self, const char *metric_name) {
   regex_t r;
+ (void)self;
   int ret = 0;
   ret = regcomp(&r, "^[a-zA-Z_:][a-zA-Z0-9_:]*$", REG_EXTENDED);
   if (ret) {

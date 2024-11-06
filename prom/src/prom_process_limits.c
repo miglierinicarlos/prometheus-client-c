@@ -232,7 +232,7 @@ bool prom_process_limits_rdp_character(prom_process_limits_file_t *f, prom_map_t
                                        prom_process_limits_current_row_t *current_row) {
   if (prom_process_limits_rdp_letter(f, map, current_row)) return true;
   if (prom_process_limits_rdp_digit(f, map, current_row)) return true;
-  if (f->buf[f->index] == ' ' && f->buf[f->index] < f->size - 1) {
+  if ((size_t)f->buf[f->index] == ' ' && (size_t)f->buf[f->index] < f->size - 1) {
     f->index++;
     return true;
   }
@@ -240,10 +240,10 @@ bool prom_process_limits_rdp_character(prom_process_limits_file_t *f, prom_map_t
 }
 
 bool prom_process_limits_rdp_letter(prom_process_limits_file_t *f, prom_map_t *map,
-                                    prom_process_limits_current_row_t *current_row) {
+                                    prom_process_limits_current_row_t *current_row) { (void)map;(void)current_row;
   if (f->index >= f->size - 1) return false;
   unsigned int size = sizeof(PROM_PROCESS_LIMITS_RDP_LETTERS);
-  for (int i = 0; i < size; i++) {
+  for (size_t i = 0; i < size; i++) {
     int letter = PROM_PROCESS_LIMITS_RDP_LETTERS[i];
     int in_buff = f->buf[f->index];
     if (letter == in_buff) {
@@ -255,10 +255,10 @@ bool prom_process_limits_rdp_letter(prom_process_limits_file_t *f, prom_map_t *m
 }
 
 bool prom_process_limits_rdp_digit(prom_process_limits_file_t *f, prom_map_t *map,
-                                   prom_process_limits_current_row_t *current_row) {
+                                   prom_process_limits_current_row_t *current_row) {(void)map; (void)current_row;
   if (f->index >= f->size - 1) return false;
   unsigned int size = sizeof(PROM_PROCESS_LIMITS_RDP_DIGITS);
-  for (int i = 0; i < size; i++) {
+  for (size_t i = 0; i < size; i++) {
     int digit = PROM_PROCESS_LIMITS_RDP_DIGITS[i];
     int in_buff = f->buf[f->index];
     if (digit == in_buff) {
@@ -298,7 +298,7 @@ bool prom_process_limits_rdp_data_line(prom_process_limits_file_t *f, prom_map_t
  * @brief EBNF: space_char = " " | "\t" ;
  */
 bool prom_process_limits_rdp_space_char(prom_process_limits_file_t *f, prom_map_t *map,
-                                        prom_process_limits_current_row_t *current_row) {
+                                        prom_process_limits_current_row_t *current_row) {(void)map; (void)current_row;
   char c = f->buf[f->index];
   if (c == ' ' || c == '\t') {
     f->index++;
@@ -319,7 +319,7 @@ bool prom_process_limits_rdp_limit(prom_process_limits_file_t *f, prom_map_t *ma
   if (prom_process_limits_rdp_word(f, map, current_row)) {
     size_t size = f->index - current_index + 1;  // Add one for \0
     char limit[size];
-    for (int i = 0; i < size - 1; i++) {
+    for (size_t i = 0; i < size - 1; i++) {
       limit[i] = f->buf[current_index + i];
     }
     limit[size - 1] = '\0';
@@ -379,6 +379,7 @@ static bool prom_process_limits_rdp_generic_limit(prom_process_limits_file_t *f,
   switch (type) {
     case PROM_PROCESS_LIMITS_RDP_SOFT:
       current_row->soft = value;
+      /* fall through */
     case PROM_PROCESS_LIMITS_RDP_HARD:
       current_row->hard = value;
   }

@@ -61,7 +61,6 @@ bool prom_process_limits_rdp_word(prom_process_limits_file_t *f, prom_map_t *dat
                                   prom_process_limits_current_row_t *current_row);
 bool prom_process_limits_rdp_soft_limit(prom_process_limits_file_t *f, prom_map_t *data,
                                         prom_process_limits_current_row_t *current_row);
-;
 bool prom_process_limits_rdp_hard_limit(prom_process_limits_file_t *f, prom_map_t *data,
                                         prom_process_limits_current_row_t *current_row);
 bool prom_process_limits_rdp_units(prom_process_limits_file_t *f, prom_map_t *data,

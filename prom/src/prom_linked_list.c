@@ -218,4 +218,6 @@ int prom_linked_list_set_compare_fn(prom_linked_list_t *self, prom_linked_list_c
   return 0;
 }
 
-void prom_linked_list_no_op_free(void *item) {}
+void prom_linked_list_no_op_free(void *item) {
+(void) item;
+}

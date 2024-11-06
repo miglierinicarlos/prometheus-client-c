@@ -43,7 +43,7 @@ prom_metric_t *prom_metric_new(prom_metric_type_t metric_type, const char *name,
 
   const char **k = (const char **)prom_malloc(sizeof(const char *) * label_key_count);
 
-  for (int i = 0; i < label_key_count; i++) {
+  for (size_t i = 0; i < label_key_count; i++) {
     if (strcmp(label_keys[i], "le") == 0) {
       PROM_LOG(PROM_METRIC_INVALID_LABEL_NAME);
       prom_metric_destroy(self);
@@ -118,7 +118,7 @@ int prom_metric_destroy(prom_metric_t *self) {
   prom_free(self->rwlock);
   self->rwlock = NULL;
 
-  for (int i = 0; i < self->label_key_count; i++) {
+  for (size_t i = 0; i < self->label_key_count; i++) {
     prom_free((void *)self->label_keys[i]);
     self->label_keys[i] = NULL;
   }
@@ -155,7 +155,7 @@ prom_metric_sample_t *prom_metric_sample_from_labels(prom_metric_t *self, const 
 
 #define PROM_METRIC_SAMPLE_FROM_LABELS_HANDLE_UNLOCK() \
   r = pthread_rwlock_unlock(self->rwlock);             \
-  if (r) PROM_LOG(PROM_PTHREAD_RWLOCK_UNLOCK_ERROR);   \
+  if (r) { PROM_LOG(PROM_PTHREAD_RWLOCK_UNLOCK_ERROR);}   \
   return NULL;
 
   // Get l_value
